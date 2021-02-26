@@ -6,9 +6,11 @@ class Fixed:
         self.e = str(n).split('.')[0]
         self.eBinaire = bin(int(self.e))
         # Partie fractionnaire
-        if type(n) != int:
+        try:
             self.f = str(n).split('.')[1]
             self.fBinaire = bin(int(self.f))      
+        except:
+            pass
 
     def __add__(self, other):
         if type(self.n == int and type(other.n == int)):
