@@ -1,12 +1,14 @@
 class Fixed:
     """Type arithmétique à point fixe."""
+
     def __init__(self, n):
         self.n = n
         multiplier = ''
-        
+
         if '.' in str(n):
-            numberOfZeroes = len(str(n).replace('.', '')) - str(n).index('.')
-            multiplier = '1' + multiplier.zfill(numberOfZeroes)
+            self.point_index = str(n).index('.')
+            number_of_zeroes = len(str(n).replace('.', '')) - self.point_index
+            multiplier = '1' + multiplier.zfill(number_of_zeroes)
             n = int(n * int(multiplier))
             self.multd = n
             self.bin = bin(n)
@@ -14,8 +16,12 @@ class Fixed:
             self.bin = bin(int(n))
 
     def __add__(self, other):
-        pass
-        
+        point = self.point_index if self.point_index > other.point_index else other.point_index
+
+        sum = int(self.bin, 2) + int(other.bin, 2)
+        sum = str(sum)[:point] + '.' + str(sum)[point:]
+        return float(sum)
+
     def __sub__(self, other):
         pass
 
@@ -25,14 +31,16 @@ class Fixed:
     def __truediv__(self, other):
         pass
 
-x = Fixed(12.1)
-y = Fixed(12.11)
+
+x = Fixed(411.1)
+y = Fixed(1231.1)
 c = Fixed(3.855)
+a = Fixed(122)
 
-print(x.n, x.multd, x.bin, bin(121))
-print(y.n, y.multd, y.bin, bin(1211))
-print(c.n, c.multd, c.bin, bin(3855))
-# print(y.bin, bin(1211))
+sum = x + y
+print(type(sum))
 
-# print(x.e, x.f)
-# print(x.eBinaire, x.fBinaire)
+# print(x.n, x.bin)
+# print(y.n, y.bin)
+# print(c.n, c.bin)
+# print(a.n, a.bin)
