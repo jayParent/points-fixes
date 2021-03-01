@@ -14,13 +14,16 @@ class Fixed:
             self.bin = bin(n)
         else:
             self.bin = bin(int(n))
+    
+    def __str__(self):
+        return str(self.n)
 
     def __add__(self, other):
         point = self.point_index if self.point_index > other.point_index else other.point_index
 
         sum = int(self.bin, 2) + int(other.bin, 2)
         sum = str(sum)[:point] + '.' + str(sum)[point:]
-        return float(sum)
+        return Fixed(float(sum))
 
     def __sub__(self, other):
         pass
@@ -38,7 +41,7 @@ c = Fixed(3.855)
 a = Fixed(122)
 
 sum = x + y
-print(type(sum))
+print(sum)
 
 # print(x.n, x.bin)
 # print(y.n, y.bin)
