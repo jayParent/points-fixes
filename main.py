@@ -3,47 +3,50 @@ class Fixed:
 
     def __init__(self, n):
         self.n = n
-        multiplier = ''
+        self.multiplier = ''
 
         if '.' in str(n):
             self.point_index = str(n).index('.')
-            number_of_zeroes = len(str(n).replace('.', '')) - self.point_index
-            multiplier = '1' + multiplier.zfill(number_of_zeroes)
-            n = int(n * int(multiplier))
-            self.multd = n
-            self.bin = bin(n)
-        else:
+            self.shifts = len(str(n).replace('.', '')) - self.point_index
+            self.multiplier = '1' + self.multiplier.zfill(self.shifts)
+            n = int(n * int(self.multiplier))
+
             self.bin = bin(int(n))
+        else:
+            self.point_index = len(str(n))
+            self.shifts = 0
+            self.bin = bin(n)
     
     def __str__(self):
         return str(self.n)
 
     def __add__(self, other):
-        point = self.point_index if self.point_index > other.point_index else other.point_index
+        result = int(self.bin, 2) + int(other.bin, 2)
+        print(int(self.bin, 2)) #?????
+        print(result) #???????
+        point_index = len(str(result)) - self.shifts - other.shifts
 
-        sum = int(self.bin, 2) + int(other.bin, 2)
-        sum = str(sum)[:point] + '.' + str(sum)[point:]
-        return Fixed(float(sum))
+        result = str(result)[:point_index] + '.' + str(result)[point_index:]
+
+        return Fixed(float(result))
 
     def __sub__(self, other):
         pass
 
     def __mul__(self, other):
-        pass
+        result = (int(self.bin, 2) * int(other.bin, 2))
+        point_index = len(str(result)) - self.shifts - other.shifts
+
+        result = str(result)[:point_index] + '.' + str(result)[point_index:]
+
+        return Fixed(float(result))
 
     def __truediv__(self, other):
         pass
 
-
-x = Fixed(411.1)
-y = Fixed(1231.1)
-c = Fixed(3.855)
-a = Fixed(122)
-
-sum = x + y
-print(sum)
-
-# print(x.n, x.bin)
-# print(y.n, y.bin)
-# print(c.n, c.bin)
-# print(a.n, a.bin)
+x = Fixed(10.1)
+y = Fixed(100)
+c = x + y
+print(c)
+# print(f'{x}, shifts: {x.shifts}')
+# print(f'{y}, shifts: {y.shifts}')
