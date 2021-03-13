@@ -21,13 +21,10 @@ class Fixed:
         return str(self.n)
 
     def __add__(self, other):
+        point_index = self.point_index if self.point_index > other.point_index else other.point_index
+
         result = int(self.bin, 2) + int(other.bin, 2)
-        print(int(self.bin, 2)) #?????
-        print(result) #???????
-        point_index = len(str(result)) - self.shifts - other.shifts
-
         result = str(result)[:point_index] + '.' + str(result)[point_index:]
-
         return Fixed(float(result))
 
     def __sub__(self, other):
