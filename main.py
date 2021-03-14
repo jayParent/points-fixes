@@ -42,20 +42,33 @@ class Fixed:
         return Fixed(result)
 
     def __sub__(self, other):
-        pass
+        result = (int(self.whole, 2) + (int(self.fraction, 2) * 0.0625)) - (int(other.whole, 2) + (int(other.fraction, 2) * 0.0625))
+        
+        return Fixed(result)
 
     def __mul__(self, other):
-        shifts = self.shifts + other.shifts
-        result = (int(self.bin.replace('.', ''), 2) * int(other.bin.replace('.', ''), 2)) * (2 ** -shifts)
+        factor = self.shifts + other.shifts
+        result = (int(self.bin.replace('.', ''), 2) * int(other.bin.replace('.', ''), 2)) * (2 ** -factor)
         
         return Fixed(result)
 
     def __truediv__(self, other):
-        pass
+        factor = self.shifts + other.shifts
 
-x = Fixed(10)
-y = Fixed(10.5)
+        result = (int(self.bin.replace('.', ''), 2) / int(other.bin.replace('.', ''), 2)) 
+
+        return Fixed(result)
+
+x = Fixed(53)
+y = Fixed(2)
 c = x + y
-print(c)
+u = x * y
+v = x - y
+t = x / y
+print(f'{x} + {y} = {c}')
+print(f'{x} * {y} = {u}')
+print(f'{x} - {y} = {v}')
+print(f'{x} / {y} = {t}')
+
 # print(f'{x}, shifts: {x.shifts}')
 # print(f'{y}, shifts: {y.shifts}')
