@@ -41,9 +41,10 @@ class Fixed:
     def __truediv__(self, other):
         pass
 
-x = Fixed(10.1)
-y = Fixed(100)
+x = Fixed(53)
+y = Fixed(26.5)
 c = x + y
-print(c)
+print(x.bin)
+print(y.bin)
 # print(f'{x}, shifts: {x.shifts}')
 # print(f'{y}, shifts: {y.shifts}')
