@@ -3,48 +3,59 @@ class Fixed:
 
     def __init__(self, n):
         self.n = n
-        self.multiplier = ''
+        factor = ''
 
-        if '.' in str(n):
+        try:
             self.point_index = str(n).index('.')
-            self.shifts = len(str(n).replace('.', '')) - self.point_index
-            self.multiplier = '1' + self.multiplier.zfill(self.shifts)
-            n = int(n * int(self.multiplier))
+            split_number = str(n).split('.')
 
-            self.bin = bin(int(n))
-        else:
-            self.point_index = len(str(n))
+            whole = f'{int(split_number[0]):012b}'
+            self.whole = bin(0)[2:] if len(whole) > 12 else whole
+            self.overflow = True if len(whole) > 12 else False
+
+            factor = '1' + factor.zfill(len(split_number[1]))
+            fraction = int(split_number[1]) / int(factor)
+            self.fraction = f'{int(fraction / 0.0625):04b}'
+
+            self.shifts = len(self.fraction)
+            self.bin = f'{self.whole}.{self.fraction}'
+
+        except:
+            self.point_index = 0
             self.shifts = 0
-            self.bin = bin(n)
-    
+
+            whole = f'{int(n):012b}'
+            self.whole = bin(0)[2:] if len(whole) > 12 else whole
+            self.overflow = True if len(whole) > 12 else False
+
+            self.fraction = f'{0:04b}'
+
+            self.shifts = len(self.fraction)
+            self.bin = f'{self.whole}.{self.fraction}'
+
     def __str__(self):
-        return str(self.n)
+        return str(f'{self.bin} ({self.n})') if self.overflow == False else str(f'{self.bin} ({OverflowError}) ({self.n})')
 
     def __add__(self, other):
-        point_index = self.point_index if self.point_index > other.point_index else other.point_index
+        result = int(self.whole, 2) + int(other.whole, 2) + (int(self.fraction, 2) * 0.0625) + (int(other.fraction, 2) * 0.0625)
 
-        result = int(self.bin, 2) + int(other.bin, 2)
-        result = str(result)[:point_index] + '.' + str(result)[point_index:]
-        return Fixed(float(result))
+        return Fixed(result)
 
     def __sub__(self, other):
         pass
 
     def __mul__(self, other):
-        result = (int(self.bin, 2) * int(other.bin, 2))
-        point_index = len(str(result)) - self.shifts - other.shifts
-
-        result = str(result)[:point_index] + '.' + str(result)[point_index:]
-
-        return Fixed(float(result))
+        shifts = self.shifts + other.shifts
+        result = (int(self.bin.replace('.', ''), 2) * int(other.bin.replace('.', ''), 2)) * (2 ** -shifts)
+        
+        return Fixed(result)
 
     def __truediv__(self, other):
         pass
 
-x = Fixed(53)
-y = Fixed(26.5)
+x = Fixed(10)
+y = Fixed(10.5)
 c = x + y
-print(x.bin)
-print(y.bin)
+print(c)
 # print(f'{x}, shifts: {x.shifts}')
 # print(f'{y}, shifts: {y.shifts}')
