@@ -9,12 +9,13 @@ class Fixed:
             self.point_index = str(n).index('.')
             split_number = str(n).split('.')
 
-            self.whole = bin(4096) if len(bin(int(split_number[0]))) > 12 else bin(int(split_number[0]))
-            self.whole = self.whole[2:]
+            whole = f'{int(split_number[0]):012b}'
+            self.whole = bin(0)[2:] if len(whole) > 12 else whole
+            self.overflow = True if len(whole) > 12 else False
 
             factor = '1' + factor.zfill(len(split_number[1]))
             fraction = int(split_number[1]) / int(factor)
-            self.fraction = bin(int(fraction / 0.0625))[2:]
+            self.fraction = f'{int(fraction / 0.0625):04b}'
 
             self.shifts = len(self.fraction)
             self.bin = f'{self.whole}.{self.fraction}'
@@ -23,27 +24,22 @@ class Fixed:
             self.point_index = 0
             self.shifts = 0
 
-            self.whole = bin(4096) if len(bin(int(n))) > 12 else bin(int(n))
-            self.whole = self.whole[2:]
+            whole = f'{int(n):012b}'
+            self.whole = bin(0)[2:] if len(whole) > 12 else whole
+            self.overflow = True if len(whole) > 12 else False
 
-            self.fraction = bin(0)[2:]
+            self.fraction = f'{0:04b}'
 
             self.shifts = len(self.fraction)
             self.bin = f'{self.whole}.{self.fraction}'
 
     def __str__(self):
-        return str(f'{self.bin} ({self.n})')
+        return str(f'{self.bin} ({self.n})') if self.overflow == False else str(f'{self.bin} ({OverflowError}) ({self.n})')
 
     def __add__(self, other):
-        if self.shifts > other.shifts:
-            difference = self.shifts - other.shifts
-            print(other.bin)
-            other.bin = other.bin.replace('.', '')
-            other.bin = f'{other.bin[:difference]}.{other.bin[difference:]}'
-            print(other.bin)
+        result = int(self.whole, 2) + int(other.whole, 2) + (int(self.fraction, 2) * 0.0625) + (int(other.fraction, 2) * 0.0625)
 
-
-        # return Fixed(result)
+        return Fixed(result)
 
     def __sub__(self, other):
         pass
@@ -57,8 +53,9 @@ class Fixed:
     def __truediv__(self, other):
         pass
 
-x = Fixed(8.5)
-y = Fixed(4)
+x = Fixed(10)
+y = Fixed(10.5)
 c = x + y
+print(c)
 # print(f'{x}, shifts: {x.shifts}')
 # print(f'{y}, shifts: {y.shifts}')
