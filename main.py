@@ -1,3 +1,6 @@
+# Pour lancer les tests, éxécuter le script 'main.py'
+test_list = [7, 15, 30, 36, 99]
+iterations = 5
 class Fixed:
     """Type arithmétique à point fixe."""
     def __init__(self, n):
@@ -13,7 +16,6 @@ class Fixed:
             self.overflow = True if len(whole) > 12 else False
 
             factor = '1' + factor.zfill(len(split_number[1]))
-            # print(split_number[1])
             fraction = int(split_number[1]) / int(factor)
             self.fraction = f'{int(fraction / 0.0625):04b}'
 
@@ -34,7 +36,6 @@ class Fixed:
             self.bin = f'{self.whole}.{self.fraction}'
 
     def __str__(self):
-        # return str(f'{self.bin} ({self.n})') if self.overflow == False else str(f'{self.bin} ({OverflowError}) ({self.n})')
         return str(self.n)
 
     def __add__(self, other):
@@ -59,26 +60,23 @@ class Fixed:
 
         return Fixed(result)
 
-# x = Fixed(53.5)
-# y = Fixed(2)
-# c = x + y
-# u = x * y
-# v = x - y
-# t = x / y
-# print(f'{x} + {y} = {c}')
-# print(f'{x} * {y} = {u}')
-# print(f'{x} - {y} = {v}')
-# print(f'{x} / {y} = {t}')
-
 def newton(xt, n):
     xtp1 = Fixed(0.5) * (xt + (Fixed(n) / xt))
     return Fixed(xtp1)
 
 def newton_sqrt(n, iterations):
+    print('**********************')
+    print(f'Methode de Newton: sqrt({n})')
     xt = Fixed(0.5 * n)
 
     for t in range(iterations):
         xt = newton(xt, n)
-        print(xt)
+        print(f't{t}: {xt}')
+    
+    print('**********************\n')
 
-newton_sqrt(7, 5)
+def tests(list, iterations):
+    for t in list:
+        newton_sqrt(t, iterations)
+
+tests(test_list, iterations)
