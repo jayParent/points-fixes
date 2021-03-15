@@ -1,8 +1,17 @@
+# Jerome Parent 
+
 # Pour lancer les tests, éxécuter le script 'main.py'
+
+# Quels effets a la precision sur les iterations de l'algorithme de Newton?
+# La précision très limitée de notre implémentation à 16 bits resulte en l'obtention d'un résultat
+# approximatif après peu d'itérations. Par contre, augmenter le nombre d'itérations ne nous permet pas
+# de nous approcher de plus en plus du vrai zéro comme il sera le cas avec le même algoritme mais avec une plus
+# grande précision.
+
 test_list = [7, 15, 30, 36, 99]
 iterations = 5
 class Fixed:
-    """Type arithmétique à point fixe."""
+    """Type arithmétique à point fixe sur 16 bits."""
     def __init__(self, n):
         self.n = n
         factor = ''
@@ -70,8 +79,8 @@ def newton_sqrt(n, iterations):
     xt = Fixed(0.5 * n)
 
     for t in range(iterations):
-        xt = newton(xt, n)
         print(f't{t}: {xt}')
+        xt = newton(xt, n)
     
     print('**********************\n')
 
