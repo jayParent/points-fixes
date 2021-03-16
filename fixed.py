@@ -1,12 +1,14 @@
 # Jerome Parent 
 
-# Pour lancer les tests, éxécuter le script 'main.py'
+# Python 3.8
+# Pour lancer les tests, éxécuter le script 'fixed.py'
 
 # Quels effets a la precision sur les iterations de l'algorithme de Newton?
-# La précision très limitée de notre implémentation à 16 bits resulte en l'obtention d'un résultat
+# La précision très limitée de notre implémentation à 16 bits (seulement 4 bits pour la partie fractionnaire) resulte en l'obtention d'un résultat
 # approximatif après peu d'itérations. Par contre, augmenter le nombre d'itérations ne nous permet pas
 # de nous approcher de plus en plus du vrai zéro comme il sera le cas avec le même algoritme mais avec une plus
-# grande précision.
+# grande précision. Sachant que le nombre de chiffres significatifs corrects double à chaque itération, n'utiliser que 4 bits
+# limite très rapidement l'augmentation de précision à chaque itération.
 
 test_list = [7, 15, 30, 36, 99]
 iterations = 5
@@ -26,7 +28,7 @@ class Fixed:
 
             factor = '1' + factor.zfill(len(split_number[1]))
             fraction = int(split_number[1]) / int(factor)
-            self.fraction = f'{int(fraction / 0.0625):04b}'
+            self.fraction = f'{int(fraction / (1 / 16)):04b}'
 
             self.shifts = len(self.fraction)
             self.bin = f'{self.whole}.{self.fraction}'
@@ -45,15 +47,15 @@ class Fixed:
             self.bin = f'{self.whole}.{self.fraction}'
 
     def __str__(self):
-        return str(self.n)
+        return str(self.n) if not self.overflow else OverflowError
 
     def __add__(self, other):
-        result = int(self.whole, 2) + int(other.whole, 2) + (int(self.fraction, 2) * 0.0625) + (int(other.fraction, 2) * 0.0625)
+        result = int(self.whole, 2) + int(other.whole, 2) + (int(self.fraction, 2) * (1 / 16)) + (int(other.fraction, 2) * (1 / 16))
 
         return Fixed(result)
 
     def __sub__(self, other):
-        result = (int(self.whole, 2) + (int(self.fraction, 2) * 0.0625)) - (int(other.whole, 2) + (int(other.fraction, 2) * 0.0625))
+        result = (int(self.whole, 2) + (int(self.fraction, 2) * (1 / 16))) - (int(other.whole, 2) + (int(other.fraction, 2) * (1 / 16)))
         
         return Fixed(result)
 
@@ -89,3 +91,7 @@ def tests(list, iterations):
         newton_sqrt(t, iterations)
 
 tests(test_list, iterations)
+
+# Références
+# https://inst.eecs.berkeley.edu/~cs61c/sp06/handout/fixedpt.html
+# https://en.wikipedia.org/wiki/Fixed-point_arithmetic
